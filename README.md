@@ -1,3 +1,3 @@
 # Todo
 
-A iOs todo list app
+An iOs todo list app
