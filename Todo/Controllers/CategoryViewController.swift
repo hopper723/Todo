@@ -8,15 +8,18 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     var categories: Results<Category>?
+    //let alpha = 0.75
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCategory()
+        tableView.separatorStyle = .none
     }
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -27,6 +30,7 @@ class CategoryViewController: SwipeTableViewController {
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.bgColor = UIColor.randomFlat.hexValue()
             
             self.save(category: newCategory)
         }
@@ -38,6 +42,8 @@ class CategoryViewController: SwipeTableViewController {
         }
         
         alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
+        
         present(alert, animated: true, completion: nil)
     }
     
@@ -50,6 +56,10 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
+        
+        let colorHex = categories?[indexPath.row].bgColor ?? "4DBCE9"
+        cell.backgroundColor = UIColor(hexString: colorHex)
+        cell.textLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
         
         return cell
     }
